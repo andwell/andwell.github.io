@@ -84,12 +84,27 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Guo's Page">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="开篇之前关于移动客户端网络层设计相关的文章可能已经数不胜数了，所以原本并没打算单独开篇来讲这块，鉴于近期有同事说要我写个网络库的介绍文档，我就干脆写篇博文吧，从网络层的设计之初到中期遇到的问题和后期的更新一并娓娓道来，权当设计文档讲解了。
+移动端网络层设计考虑的问题一个良好的封装往往耗时最多是在前期的思考上，同样在网络库设计之初，我们把大部分时间花在考虑以下几个问题上。
+
+使用者如何去调用API">
+<meta property="og:type" content="article">
+<meta property="og:title" content="58同城移动客户端iOS网络库设计实践">
+<meta property="og:url" content="http://yoursite.com/2016/08/14/Network/index.html">
 <meta property="og:site_name" content="Guo's Page">
+<meta property="og:description" content="开篇之前关于移动客户端网络层设计相关的文章可能已经数不胜数了，所以原本并没打算单独开篇来讲这块，鉴于近期有同事说要我写个网络库的介绍文档，我就干脆写篇博文吧，从网络层的设计之初到中期遇到的问题和后期的更新一并娓娓道来，权当设计文档讲解了。
+移动端网络层设计考虑的问题一个良好的封装往往耗时最多是在前期的思考上，同样在网络库设计之初，我们把大部分时间花在考虑以下几个问题上。
+
+使用者如何去调用API">
+<meta property="og:image" content="http://yoursite.com/images/network121.png">
+<meta property="og:updated_time" content="2016-08-14T11:26:52.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Guo's Page">
+<meta name="twitter:title" content="58同城移动客户端iOS网络库设计实践">
+<meta name="twitter:description" content="开篇之前关于移动客户端网络层设计相关的文章可能已经数不胜数了，所以原本并没打算单独开篇来讲这块，鉴于近期有同事说要我写个网络库的介绍文档，我就干脆写篇博文吧，从网络层的设计之初到中期遇到的问题和后期的更新一并娓娓道来，权当设计文档讲解了。
+移动端网络层设计考虑的问题一个良好的封装往往耗时最多是在前期的思考上，同样在网络库设计之初，我们把大部分时间花在考虑以下几个问题上。
+
+使用者如何去调用API">
+<meta name="twitter:image" content="http://yoursite.com/images/network121.png">
 
 
 
@@ -110,9 +125,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/08/14/Network/"/>
 
-  <title> Guo's Page </title>
+  <title> 58同城移动客户端iOS网络库设计实践 | Guo's Page </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
@@ -133,9 +148,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -212,9 +225,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -234,10 +247,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/08/14/Network/" itemprop="url">
-                  58同城移动客户端iOS网络库设计实践
-                </a>
+                58同城移动客户端iOS网络库设计实践
               
             
           </h1>
@@ -277,9 +287,7 @@
       
 
       
-        
-          
-            <h2 id="开篇之前"><a href="#开篇之前" class="headerlink" title="开篇之前"></a>开篇之前</h2><p>关于移动客户端网络层设计相关的文章可能已经数不胜数了，所以原本并没打算单独开篇来讲这块，鉴于近期有同事说要我写个网络库的介绍文档，我就干脆写篇博文吧，从网络层的设计之初到中期遇到的问题和后期的更新一并娓娓道来，权当设计文档讲解了。</p>
+        <h2 id="开篇之前"><a href="#开篇之前" class="headerlink" title="开篇之前"></a>开篇之前</h2><p>关于移动客户端网络层设计相关的文章可能已经数不胜数了，所以原本并没打算单独开篇来讲这块，鉴于近期有同事说要我写个网络库的介绍文档，我就干脆写篇博文吧，从网络层的设计之初到中期遇到的问题和后期的更新一并娓娓道来，权当设计文档讲解了。</p>
 <h2 id="移动端网络层设计考虑的问题"><a href="#移动端网络层设计考虑的问题" class="headerlink" title="移动端网络层设计考虑的问题"></a>移动端网络层设计考虑的问题</h2><p>一个良好的封装往往耗时最多是在前期的思考上，同样在网络库设计之初，我们把大部分时间花在考虑以下几个问题上。</p>
 <ul>
 <li>使用者如何去调用API</li>
@@ -337,16 +345,20 @@
 <h4 id="关于适配ipv6"><a href="#关于适配ipv6" class="headerlink" title="关于适配ipv6"></a>关于适配ipv6</h4><p>同样我们可以从上图能看到网络监控的模块，基于苹果给出的源码类<code>reachability</code>再开发，并且实现网络状态(2G/3G/4G/wifi)变化的监控。严格把控APP内IP直连的接口，按照Apple文档修改即可。</p>
 <h4 id="关于对接同步NSURLSession"><a href="#关于对接同步NSURLSession" class="headerlink" title="关于对接同步NSURLSession"></a>关于对接同步<code>NSURLSession</code></h4><p>AFN3.0已经作出了相应更改支持<code>NSURLSession</code>，但是并不能很好的解决线程优先级、依赖等问题，所以我们直接摒弃AFN那套，保留了其请求前配置相关和数据返回后序列化相关的思路，取其精华去其糟粕的开发出了新的底层网络库，如上示意图。细节开发与设计，留于下篇讲解吧。</p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
@@ -354,164 +366,32 @@
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
+              <a href="/2015/06/16/first/" rel="next" title="IOS动态更新--framework实现">
+                <i class="fa fa-chevron-left"></i> IOS动态更新--framework实现
+              </a>
             
-              
-                
-                <a class="post-title-link" href="/2015/06/16/first/" itemprop="url">
-                  IOS动态更新--framework实现
-                </a>
-              
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-06-16T23:49:26+08:00" content="2015-06-16">
-              2015-06-16
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><h3 id="程序从编辑到运行经历的阶段"><a href="#程序从编辑到运行经历的阶段" class="headerlink" title="程序从编辑到运行经历的阶段"></a>程序从编辑到运行经历的阶段</h3><p>预编译 &gt;&gt; 编译(Compile) &gt;&gt; 链接(Link) &gt;&gt; 运行(Run)<br>众所周知<strong>Objective-C</strong>为消息型语言，与<strong>C++/Java</strong>不同的是将一些决定从编译和链接时推迟到运行时。</p>
-<h2 id="什么是Framework"><a href="#什么是Framework" class="headerlink" title="什么是Framework"></a>什么是Framework</h2><p>所谓Framework从字面来看就是个<strong>框架</strong>，此框架并非架构、设计而言的结果，而是相对文件组成而言的封装。</p>
-<h3 id="framework由什么组成"><a href="#framework由什么组成" class="headerlink" title="framework由什么组成"></a>framework由什么组成</h3><p>用苹果自己的话就是:</p>
-<blockquote>
-<p><em>Frameworks are a collection of code and resources to encapsulate functionality…</em>   </p>
-</blockquote>
-<p>简单来说就是 <strong>资源+代码</strong> 等文件的集成。如下图: 百度地图SDK<br><img src="/images/framework.png" alt=""> </p>
-<h3 id="怎么制作framework"><a href="#怎么制作framework" class="headerlink" title="怎么制作framework"></a>怎么制作framework</h3><p>苹果的库有<strong>静态库(.a)</strong>、<strong>动态库(.dylib)</strong>，早期第三方项目的代码像分享SDK或者openssl依赖库等都是封装成<code>.a</code>的静态库的形式开放的，当然也有不少会做成<code>伪framework</code>的形式(早期Facebook的SDK就是)，像我们以前制作的游戏SDK，其实就是通过脚本把静态库打包成类framework的包。<br><br>然而Apple在2014<em>WWDC</em>大会首次开放了IOS官方制作framework的功能，并集成到了<strong>XCode6</strong>当中。<a href="https://developer.apple.com/library/prerelease/ios/documentation/DeveloperTools/Conceptual/WhatsNewXcode/Articles/xcode_6_0.html" target="_blank" rel="external">参考官方介绍</a></p>
-<blockquote>
-<p><em>Frameworks for iOS. iOS developers can now create dynamic frameworks. Frameworks are a collection of code and resources to encapsulate functionality that is valuable across multiple projects. Frameworks work perfectly with extensions, sharing logic that can be used by both the main application and the bundled extensions.</em>   </p>
-</blockquote>
-<p>很多人都会疑惑一点：为什么是dynamic framework?<br>难道Apple已开放以framework来动态更新，这其实是个模棱两可的态度。但至少我们认清一个概念: framework分为两种<strong><code>static</code></strong>&amp;<strong><code>dynamic</code></strong>.<br>关于制作方式，网上搜索已经一大堆了，比如<a href="http://blog.csdn.net/like7xiaoben/article/details/44081257" target="_blank" rel="external">参考这篇</a>. </p>
-<h3 id="制作framework当中的问题"><a href="#制作framework当中的问题" class="headerlink" title="制作framework当中的问题"></a>制作framework当中的问题</h3><p>既然网上制作方式一大堆，为什么还要写这篇博文呢？出于以下几点:<br>  </p>
-<ul>
-<li>很多人制作完以后真机不能使用或者报各种错</li>
-<li>怎么作签名认证(嵌入provision)</li>
-<li>认清应用场景(动态更新)<br><br><br><br>1.真机不能使主要原因在于没有作签名认证。<br>2.签名认证方式:比较简单，在制作framework时选择好相应的code signing<code>Identity</code>和<code>Provisioning Profile</code>即可。<br><img src="/images/framework2.png" alt="">由图上可看出与开放型framework不同的是多了个embedded.mobileprovision文件。<br>同时是支持IOS6及以下的，真机、模拟器皆可。<a href="https://github.com/andwell/Framework" target="_blank" rel="external">代码demo</a><br></li>
-</ul>
-<h3 id="动态framework运作"><a href="#动态framework运作" class="headerlink" title="动态framework运作"></a>动态framework运作</h3><p>动态库允许应用在需要时将代码内存地址动态的加载，无论是应用启动时还是运行时都可以动态去加载<a href="http://ddeville.me/2014/04/dynamic-linking/" target="_blank" rel="external">参考文章</a>。正如<strong>前言</strong>中提到的最后一步便可按需加载，所以可以为我们在IOS的动态更新当中提供可行性。<br>而在IOS当中苹果有开放的动态实现接口: <code>dlopen</code>加载动态库</p>
-<h3 id="苹果审核可行性"><a href="#苹果审核可行性" class="headerlink" title="苹果审核可行性"></a>苹果审核可行性</h3><p>依照苹果审核条例，不允许进行动态更新，所以这一点就是不可避免的风险。<br>如何机智规避：   </p>
-<ol>
-<li>避免使用dlopen方式加载动态库(上传时便能字符串检测到) 替换方案:<pre><code class="objective-c">NSBundle *bundle = [NSBundle bundleWithPath:frameworkPath];
- if ([bundle loadAndReturnError:&amp;err]) {
-     Class frameClass = NSClassFromString(@&quot;AnyFrameworkClass&quot;);
-     if (frameClass != nil){
-         // alloc and initizal
-     }
- }
-</code></pre>
-</li>
-<li>不直接存储.framework文件在沙盒当中，加密或者解压加载后即焚。<br><br><strong>当然这依然还是避免不了人为举报风险（还需酌情使用）</strong></li>
-</ol>
-<h2 id="IOS动态更新"><a href="#IOS动态更新" class="headerlink" title="IOS动态更新"></a>IOS动态更新</h2><h3 id="动态更新可行方案"><a href="#动态更新可行方案" class="headerlink" title="动态更新可行方案"></a>动态更新可行方案</h3><p>ios应用当中动态更新，目前有几个可行性方案主要包括以下几种:        </p>
-<ul>
-<li>web加载式动态更新(最常用最古老的方式)</li>
-<li>lua文件控制动态更新(最麻烦最糟糕的方式)</li>
-<li>react native框架js动态更新(最时髦的方式)</li>
-<li>framework模块化后动态库式更新(最危险的方式)    </li>
-</ul>
-<p>1.第一种主流还是依靠<code>phonegap</code>框架的<code>hybird</code>应用，动态部分依赖web页面来动态改变更新。但在用户体验、native交互方面依然还是硬伤。<br>2.第二种主要是在runtime动态替换object相应的方法或属性来达到动态更新的效果。但<code>.lua</code>文件的编写是个很痛苦的过程，先不说没有相对智能的开发工具，更大的死穴是无调试工具支持。<br>3.React Native是近期Facebook开源的新框架，意在用js开发native APP，目前仅IOS开放开源项目(Android版也将临近)，显而易见修改部分js便可达到动态更新。这需要RD具备js开发技能便足够。<br>4.framework方式便是这篇文章主旨。    </p>
-<p>下载并解压当前主流的APP便能看出其使用了何种方案，以下是我看到的结果:       </p>
-<ul>
-<li>QQ使用了lua来动态更新部分页面</li>
-<li>天猫ipad版使用了react native框架</li>
-<li>大部分还是Hybird APP</li>
-<li>暂未发现有framework动态更新的应用(很遗憾)<br></li>
-</ul>
-<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ol>
-<li>类游戏应用关卡  </li>
-<li>组件化的插件/模块 (类似支付宝插件)</li>
-<li>修复线上模块bug (前提是提取出的组件化模块)</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -519,6 +399,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -538,8 +422,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -575,6 +468,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#开篇之前"><span class="nav-number">1.</span> <span class="nav-text">开篇之前</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#移动端网络层设计考虑的问题"><span class="nav-number">2.</span> <span class="nav-text">移动端网络层设计考虑的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用者如何去调用API"><span class="nav-number">2.1.</span> <span class="nav-text">使用者如何去调用API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以什么方式回调给业务层调用者"><span class="nav-number">2.2.</span> <span class="nav-text">以什么方式回调给业务层调用者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将什么样的数据交付给调用者"><span class="nav-number">2.3.</span> <span class="nav-text">将什么样的数据交付给调用者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何优化网络层"><span class="nav-number">2.4.</span> <span class="nav-text">如何优化网络层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于我们网络库的设计"><span class="nav-number">2.5.</span> <span class="nav-text">关于我们网络库的设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#关于适配ipv6"><span class="nav-number">2.5.1.</span> <span class="nav-text">关于适配ipv6</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于对接同步NSURLSession"><span class="nav-number">2.5.2.</span> <span class="nav-text">关于对接同步NSURLSession</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -671,6 +575,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
