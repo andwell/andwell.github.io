@@ -99,7 +99,7 @@
 使用者如何去调用API
 以什么方">
 <meta property="og:image" content="http://yoursite.com/images/network121.png">
-<meta property="og:updated_time" content="2016-08-14T16:50:29.000Z">
+<meta property="og:updated_time" content="2016-08-15T03:19:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="58同城移动客户端iOS网络库设计实践">
 <meta name="twitter:description" content="开篇之前关于移动客户端网络层设计相关的文章可能已经数不胜数了，所以原本并没打算单独开篇来讲这块，鉴于近期有同事说要我写个网络库的介绍文档，我就干脆写篇博文吧，从网络层的设计之初思考的问题到后期更新一并娓娓道来，权当设计文档讲解罢。
@@ -348,10 +348,10 @@
 <p>虽然图中并没直接指出具体实现，但不难想到具体逻辑。</p>
 <ol>
 <li>关于请求超时的计算，粒度并不如Facebook他们做的那么细，利用RTT(往返时延)每次请求由服务端来实时返回，效果会更佳。</li>
-<li>同样，由于<strong>集中式调用</strong>的优势，APP所有当前网络请求都会在网络库线程队列当中，从而很容易判断出当前APP的并发状态，是否繁忙、空闲(某些业务场景像非实时必要的日志上传就可以选择在空闲时进行)。</li>
+<li>同样，由于<strong>集中式调用</strong>的优势，APP当前经过网络库的所有网络请求都会在线程队列当中，从而很容易判断出当前APP的并发状态，是否繁忙、空闲(某些业务场景像非实时必要的日志上传就可以选择在空闲时进行)。</li>
 </ol>
 <h4 id="关于适配ipv6"><a href="#关于适配ipv6" class="headerlink" title="关于适配ipv6"></a>关于适配ipv6</h4><p>同样我们可以从上图能看到网络监控的模块，基于苹果给出的开源类<code>reachability</code>再开发，并且实现网络状况(2G/3G/4G/wifi)变化的监控。严格把控APP内IP直连的请求，按照Apple文档修改即可。</p>
-<h4 id="关于同步对接NSURLSession"><a href="#关于同步对接NSURLSession" class="headerlink" title="关于同步对接NSURLSession"></a>关于同步对接<code>NSURLSession</code></h4><p>AFN3.0已经作出了相应更改支持<code>NSURLSession</code>，这就为迎接明年的HTTPS定了基调，但由于去掉了<code>NSOperation</code>的使用方式，就难以实现线程优先级、依赖等问题，所以我们摒弃直接使用AFN，保留了其请求前配置相关和数据返回后序列化相关的思路，取其精华去其糟粕的开发出了新的底层网络库，如上示意图。细节开发与设计，留于下篇讲解吧。</p>
+<h4 id="关于同步对接NSURLSession"><a href="#关于同步对接NSURLSession" class="headerlink" title="关于同步对接NSURLSession"></a>关于同步对接<code>NSURLSession</code></h4><p>AFN3.0已经作出了相应更改支持<code>NSURLSession</code>，共享Session实现TCP复用从而减少握手时间，同时也简化了代码对认证的操作，这就为迎接明年的HTTPS定了基调，但AFN去掉了<code>NSOperation</code>的使用方式，就难以实现线程优先级、依赖等问题，所以我们摒弃直接使用AFN，保留了其请求前配置相关和数据返回后序列化相关的思路，取其精华去其糟粕的开发出了新的底层网络库，如上示意图。细节开发与设计，留于下篇讲解吧。</p>
 
       
     </div>
