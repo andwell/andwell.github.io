@@ -494,7 +494,7 @@ h6 {
 }
 .site-header.header-background {
   border-bottom: 0;
-  background-color: #808080;
+  background-color: #fff;
   background-position: center center;
   background-attachment: scroll;
   -webkit-background-size: cover;
