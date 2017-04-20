@@ -101,7 +101,7 @@
           <!-- Date -->
           <span class="date-time info">On
             <span class="date">2017-03-11</span>
-            <span class="time">16:08:34</span>
+            <span class="time">16:15:46</span>
           </span>
           
           <!--  Categories  -->
@@ -126,10 +126,10 @@
           <p>作为一名从业5年的iOS开发者，我也曾有过许多关于使用<strong>UIView</strong>的疑惑，也很好奇这些琳琅满目的视图是如何绘制到iPhone屏幕上的，多年的使用经验也未必对其烂如指掌，只能说稍有了解，今天就与我一同来探究一番。<br><a id="more"></a></p>
 <h3 id="视图层结构"><a href="#视图层结构" class="headerlink" title="视图层结构"></a>视图层结构</h3><p>当我们拿到一个关于视图的需求时，最初要想的便是使用什么样的视图控件来实现？所以这就考验我们对于iOS系统支持的原生控件的熟练程度，比如：当你需要一个图片展示容器，我们首先想到使用<strong>UIImageView</strong>；当需要一个文本行展示，我们会想到<strong>UILabel</strong>，这都是出于你对UIKit组件框架的基本了解；那么当遇到需要图片和文本混排出现的需求时，我们应该使用怎样的视图控件呢？初级程序员会想到<strong>UILabel+UIImageView+UILabel</strong>来解决，然而稍有经验的程序员会选择自定义封装一个控件，孰优孰劣呢？</p>
 <p>我们知道iOS中视图相关的控件都是继承自<strong>UIView</strong>的（注意这里我指的都是控件），比如 UIButton/UILabel/UIImageView/UITableViewCell/UIScrollView等，然而<strong>UIView</strong>本身是不具备任何直接渲染显示能力的。我们也可以直接使用<strong>CALayer</strong>来封装展示出你想要的各种视图样式，那么他们都是什么样的关系结构呢？我们就从继承或所属关系讲起吧。</p>
-<p><img src="/images/view_pic1.png" alt=""></p>
+<p><img src="/images/viewpic1.png" alt=""></p>
 <p>从图上我们能看出任何继承自<strong>UIView</strong>的控件都有一个layer，这是在<strong>UIView</strong>创建的时候系统会默认创建一个<strong>CALayer</strong>的属性实例。而这个<strong>CALayer</strong>所属<strong>CoreAnimation</strong>框架（由于类文件过少，目前被纳入<strong>QuartzCore</strong>视图引擎框架中），这是同时为iOS和Mac OS共用的类。</p>
 <h3 id="视图层到屏幕显示"><a href="#视图层到屏幕显示" class="headerlink" title="视图层到屏幕显示"></a>视图层到屏幕显示</h3><p>看了上图的结构，也许你依然疑惑：视图层到底是怎样渲染并显示到屏幕上的？那我们就继续往下探究，同样先给出一个直观点的示意流程图吧。（接下来只讲大致流程，鉴于篇幅过长，暂不详说）</p>
-<p><img src="/images/view_pic2.png" alt=""></p>
+<p><img src="/images/viewpic2.png" alt=""></p>
 <p>按图示流程，① <strong>Core Animation</strong>(简称CA)会处理一个layout and display的Transaction（后文讲这是哪里来的消息事件），通过layer(CALayer)传递到其delegate(UIView)，②<strong> Core Graphics</strong>(简称CG)是一个轻量级绘画引擎在这其中提供上下文（Contenxt）及一些常用绘画工作，因此直接使用CA和CG搭配也能达到绘制的目的（上图中的①②），<strong>UIKit</strong>只是iOS提供了更丰富的用户交互事件来封装控件而已（别忘了<strong>UIView</strong>继承自<strong>UIResponder</strong>），③ 将绘制后的上下文返回到<strong>CALayer</strong>并由CA转换成位图纹理，④ 通过<strong>OpenGL ES</strong>将位图内容交由GPU作变换、合成、渲染等处理，渲染完成后放入帧缓冲区，⑤ 视频控制器按照 V-Sync 信号读取帧缓冲区的数据，最后传递给显示器显示出来。</p>
 <h3 id="不停歇地显示"><a href="#不停歇地显示" class="headerlink" title="不停歇地显示"></a>不停歇地显示</h3><p>以上从视图到显示的原理想必大家都理解了，但或许依然存在这样一个疑问：为什么屏幕会不停歇地流畅显示呢？这就要从<strong>Runloop</strong>开始说起了，如果对<strong>Runloop</strong>不甚了解的同学赶紧去网络上搜索并恶补之，这里不做详细解说了，简而言之，就像操作系统为什么会不停的工作着（即使你开机后什么也不做），正是有一个循环的程序在周而复始的运行，<strong>Runloop</strong>即是如此。当用户触摸屏幕时<strong>Runloop</strong>会高优先级处理这些交互事件源（俗称source0之一），此时会触发CA在<strong>Runloop</strong>中的监听回调（<code>CA::Transaction::observer_callback</code>）再逐步处理便有了上面说的①消息源头（当然触发①不仅这一点）。</p>
 <p>当用户不操作且无其他定时代码操作时，视频控制器会依照60HZ频率发出的V-Sync来重复读取帧缓冲区中数据并显示到屏幕（此时仅是因为缓冲区数据未被更新而已）。</p>
