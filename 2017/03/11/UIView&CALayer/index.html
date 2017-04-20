@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Fangqing Guo">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="小说iOS视图层（UIView/CALayer）绘制"/>
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="Guo&#39;s Page"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://yoursite.comundefined"/>
+  
+    <link rel="alternate" href="/atom.xml" title="Guo&#39;s Page" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>Guo's Page</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/images/yosemite.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">小说iOS视图层（UIView/CALayer）绘制</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  主页
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  文章列表
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/andwell">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:wellguo@hotmail.com">
+                  
+                  邮箱
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By Fangqing Guo</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2017-03-11</span>
+            <span class="time">16:08:34</span>
+          </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/视图层/">视图层</a>
+</span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/视图/">#视图</a> <a class="tag" href="/tags/UIView/">#UIView</a> <a class="tag" href="/tags/CALayer/">#CALayer</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>作为一名从业5年的iOS开发者，我也曾有过许多关于使用<strong>UIView</strong>的疑惑，也很好奇这些琳琅满目的视图是如何绘制到iPhone屏幕上的，多年的使用经验也未必对其烂如指掌，只能说稍有了解，今天就与我一同来探究一番。<br><a id="more"></a></p>
+<h3 id="视图层结构"><a href="#视图层结构" class="headerlink" title="视图层结构"></a>视图层结构</h3><p>当我们拿到一个关于视图的需求时，最初要想的便是使用什么样的视图控件来实现？所以这就考验我们对于iOS系统支持的原生控件的熟练程度，比如：当你需要一个图片展示容器，我们首先想到使用<strong>UIImageView</strong>；当需要一个文本行展示，我们会想到<strong>UILabel</strong>，这都是出于你对UIKit组件框架的基本了解；那么当遇到需要图片和文本混排出现的需求时，我们应该使用怎样的视图控件呢？初级程序员会想到<strong>UILabel+UIImageView+UILabel</strong>来解决，然而稍有经验的程序员会选择自定义封装一个控件，孰优孰劣呢？</p>
+<p>我们知道iOS中视图相关的控件都是继承自<strong>UIView</strong>的（注意这里我指的都是控件），比如 UIButton/UILabel/UIImageView/UITableViewCell/UIScrollView等，然而<strong>UIView</strong>本身是不具备任何直接渲染显示能力的。我们也可以直接使用<strong>CALayer</strong>来封装展示出你想要的各种视图样式，那么他们都是什么样的关系结构呢？我们就从继承或所属关系讲起吧。</p>
+<p><img src="/images/view_pic1.png" alt=""></p>
+<p>从图上我们能看出任何继承自<strong>UIView</strong>的控件都有一个layer，这是在<strong>UIView</strong>创建的时候系统会默认创建一个<strong>CALayer</strong>的属性实例。而这个<strong>CALayer</strong>所属<strong>CoreAnimation</strong>框架（由于类文件过少，目前被纳入<strong>QuartzCore</strong>视图引擎框架中），这是同时为iOS和Mac OS共用的类。</p>
+<h3 id="视图层到屏幕显示"><a href="#视图层到屏幕显示" class="headerlink" title="视图层到屏幕显示"></a>视图层到屏幕显示</h3><p>看了上图的结构，也许你依然疑惑：视图层到底是怎样渲染并显示到屏幕上的？那我们就继续往下探究，同样先给出一个直观点的示意流程图吧。（接下来只讲大致流程，鉴于篇幅过长，暂不详说）</p>
+<p><img src="/images/view_pic2.png" alt=""></p>
+<p>按图示流程，① <strong>Core Animation</strong>(简称CA)会处理一个layout and display的Transaction（后文讲这是哪里来的消息事件），通过layer(CALayer)传递到其delegate(UIView)，②<strong> Core Graphics</strong>(简称CG)是一个轻量级绘画引擎在这其中提供上下文（Contenxt）及一些常用绘画工作，因此直接使用CA和CG搭配也能达到绘制的目的（上图中的①②），<strong>UIKit</strong>只是iOS提供了更丰富的用户交互事件来封装控件而已（别忘了<strong>UIView</strong>继承自<strong>UIResponder</strong>），③ 将绘制后的上下文返回到<strong>CALayer</strong>并由CA转换成位图纹理，④ 通过<strong>OpenGL ES</strong>将位图内容交由GPU作变换、合成、渲染等处理，渲染完成后放入帧缓冲区，⑤ 视频控制器按照 V-Sync 信号读取帧缓冲区的数据，最后传递给显示器显示出来。</p>
+<h3 id="不停歇地显示"><a href="#不停歇地显示" class="headerlink" title="不停歇地显示"></a>不停歇地显示</h3><p>以上从视图到显示的原理想必大家都理解了，但或许依然存在这样一个疑问：为什么屏幕会不停歇地流畅显示呢？这就要从<strong>Runloop</strong>开始说起了，如果对<strong>Runloop</strong>不甚了解的同学赶紧去网络上搜索并恶补之，这里不做详细解说了，简而言之，就像操作系统为什么会不停的工作着（即使你开机后什么也不做），正是有一个循环的程序在周而复始的运行，<strong>Runloop</strong>即是如此。当用户触摸屏幕时<strong>Runloop</strong>会高优先级处理这些交互事件源（俗称source0之一），此时会触发CA在<strong>Runloop</strong>中的监听回调（<code>CA::Transaction::observer_callback</code>）再逐步处理便有了上面说的①消息源头（当然触发①不仅这一点）。</p>
+<p>当用户不操作且无其他定时代码操作时，视频控制器会依照60HZ频率发出的V-Sync来重复读取帧缓冲区中数据并显示到屏幕（此时仅是因为缓冲区数据未被更新而已）。</p>
+<h3 id="代码执行时机"><a href="#代码执行时机" class="headerlink" title="代码执行时机"></a>代码执行时机</h3><p>对于程序员来讲，几行代码胜千言，我们就秉承着“无代码不哔哔”的原则来一起看看代码吧。先来说说曾经我也十分疑惑的以下几个方法的执行时机（此处不分先后，仅列举）。</p>
+<p><strong>UIView</strong>方法(部分可重写但不可主动调用)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">- setNeedsLayout</div><div class="line">- layoutIfNeeded</div><div class="line">- layoutSubviews</div><div class="line">- setNeedsDisplay</div><div class="line">- drawRect:</div></pre></td></tr></table></figure></p>
+<p><strong>CALayer</strong>方法(部分可重写但不可主动调用)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">- setNeedsLayout</div><div class="line">- layoutIfNeeded</div><div class="line">- layoutSublayers</div><div class="line"></div><div class="line">- drawInContext:</div><div class="line">- setNeedsDisplay</div><div class="line">- displayIfNeeded</div><div class="line">- display</div></pre></td></tr></table></figure></p>
+<p><strong>CALayerDelegate</strong>协议方法(可在<strong>UIView</strong>中实现)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">- layoutSublayersOfLayer:</div><div class="line">- displayLayer:</div><div class="line">- drawLayer:inContext:</div><div class="line">- layerWillDraw:</div></pre></td></tr></table></figure></p>
+<p>从以上分类列举我们似乎通过方法命名也能看出大致的执行顺序，但类之间的执行顺序又是如何的呢，我们通过两个方面来验证</p>
+<ul>
+<li>看官方API说明文档</li>
+<li>跑demo亲测验证（戳这里<a href="https://github.com/andwell/TestViewLayer" target="_blank" rel="external">github</a> 看真相）。</li>
+</ul>
+<p>相信很多人都用过<code>drawRect:</code>这个方法来实现自定义绘制视图，我们看下官方文档的时机解释（前面一大部分略去了，<a href="https://developer.apple.com/reference/uikit/uiview/1622529-drawrect?language=objc" target="_blank" rel="external">戳查阅</a>）：</p>
+<blockquote>
+<p>This method is called when a view is first displayed or when an event occurs that invalidates a visible part of the view. You should never call this method directly yourself. To invalidate part of your view, and thus cause that portion to be redrawn, call the setNeedsDisplay or setNeedsDisplayInRect: method instead.</p>
+</blockquote>
+<p>这里我们大致清楚这个调用时机了：1. 视图第一次将被显示的时候 2. 视图可见部分被用户交互行为触发重绘的时候，当然官方还给出了提示</p>
+<blockquote>
+<p>你不能直接调用该方法，如果需要刷新重绘可以调用setNeedsDisplay方法</p>
+</blockquote>
+<p>我们demo来亲测验证下。<br>代码环境：Xcode8.2下新建简单project、新建<strong>UIView</strong>的子类<strong>CustomView</strong>（仅重写<code>drawRect:</code>方法并放置debug断点），xib拖拽view视图到默认main.storyboard显示，同时设置class为新建的<strong>CustomView</strong>。</p>
+<p>测试设备：iPhone6s plus真机（以下试验皆为此设备）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">thread #1: tid = 0x8cbdf, 0x0000000100029cbc TestViewDemo`-[CustomView drawRect:](self=0x0000000109e0e5b0, _cmd=&quot;drawRect:&quot;, rect=(origin = (x = 0, y = 0), size = (width = 240, height = 128))) + 36 at CustomView.m:31, queue = &apos;com.apple.main-thread&apos;, stop reason = breakpoint 1.1</div><div class="line">frame #0: 0x0000000100029cbc TestViewDemo`-[CustomView drawRect:](self=0x0000000109e0e5b0, _cmd=&quot;drawRect:&quot;, rect=(origin = (x = 0, y = 0), size = (width = 240, height = 128))) + 36 at CustomView.m:31</div><div class="line">frame #1: 0x0000000194ed3a60 UIKit`-[UIView(CALayerDelegate) drawLayer:inContext:] + 408</div><div class="line">frame #2: 0x00000001922f959c QuartzCore`-[CALayer drawInContext:] + 260</div><div class="line">frame #3: 0x00000001921fa848 QuartzCore`CABackingStoreUpdate_ + 2848</div><div class="line">frame #4: 0x00000001922f916c QuartzCore`___ZN2CA5Layer8display_Ev_block_invoke + 52</div><div class="line">frame #5: 0x00000001922f8e0c QuartzCore`CA::Layer::display_() + 1524</div><div class="line">frame #6: 0x00000001922ee314 QuartzCore`CA::Layer::display_if_needed(CA::Transaction*) + 228</div><div class="line">frame #7: 0x00000001922ee398 QuartzCore`CA::Layer::layout_and_display_if_needed(CA::Transaction*) + 44</div><div class="line">frame #8: 0x000000019226b3e0 QuartzCore`CA::Context::commit_transaction(CA::Transaction*) + 252</div><div class="line">frame #9: 0x0000000192292a68 QuartzCore`CA::Transaction::commit() + 512</div><div class="line">frame #10: 0x0000000192293488 QuartzCore`CA::Transaction::observer_callback(__CFRunLoopObserver*, unsigned long, void*) + 120</div><div class="line">frame #11: 0x000000018ef460c0 CoreFoundation`__CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__ + 32</div><div class="line">frame #12: 0x000000018ef43cf0 CoreFoundation`__CFRunLoopDoObservers + 372</div><div class="line">frame #13: 0x000000018ee722d8 CoreFoundation`CFRunLoopRunSpecific + 476</div><div class="line">frame #14: 0x0000000194eb97b0 UIKit`-[UIApplication _run] + 608</div><div class="line">frame #15: 0x0000000194eb4534 UIKit`UIApplicationMain + 208</div><div class="line">frame #16: 0x000000010002a7e8 TestViewDemo`main(argc=1, argv=0x000000016fddbac0) + 124 at main.m:14</div><div class="line">frame #17: 0x000000018de555b8 libdyld.dylib`start + 4</div></pre></td></tr></table></figure>
+<p>打印日志很清晰明了，如果你觉的略微混乱，我翻译成简单调用函数栈就更加清晰了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">UIKit:UIApplicationMain()</div><div class="line">UIKit:[UIApplication _run]</div><div class="line">CoreFoundation:__CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__</div><div class="line">    QuartzCore:CA::Transaction::observer_callback:</div><div class="line">        CA::Transaction::commit();</div><div class="line">            CA::Context::commit_transaction();</div><div class="line">        CA::Layer::layout_and_display_if_needed();</div><div class="line">            [CALayer display];</div><div class="line">                [CALayer drawInContext:];</div><div class="line">            [UIView drawLayer:inContext:];</div><div class="line">                [UIView drawRect];</div></pre></td></tr></table></figure></p>
+<p>虽然这里还有一些细节调用没有打印出来，但至少说明以上部分理论还是得到印证了：1. 系统会自动创建view的layer 2. 视图绘制的触发源来源于<strong>Runloop</strong>的监听事件。至此我们也基本验证了官方文档的说明时机（点击屏幕模拟交互时触发的重绘逻辑同样可以验证），同时我们还可以验证一个有意思的事情：重写<code>drawRect:</code>方法会带来更大的内存开销！！在该真机设备上不重写<code>drawRect:</code>内存占用5.3M而简单重写（并不实现任何重绘操作）后占用内存为6.7M，why？通过了解官方文档不难理解，原因在于重写<code>drawRect:</code>后CA会创建一个后备存储（back store）供CG恢复数据并上传到GPU使用。所以赶紧看看你们的项目工程中是否存在重写<code>drawRect:</code>后而无任何实现的代码，这里会有没必要的内存占用开销哦。 那么有人会问了：“不重写，系统就没有实现这个方法了？” 莫急，接下来我们验证什么情况下<code>drawRect:</code>方法不会被调用。</p>
+<p>从上面的方法调用栈可以看出，最简单的在view上实现<strong>CALayerDelegate</strong>的协议方法<code>drawLayer:inContext:</code>这样便能直接导致重写<code>drawRect:</code>无效（不被调用），这个思路告诉我们<code>drawRect:</code>不是万能的，重写或不重写都是要看剧情需要的。你可知道<strong>UIImageView</strong>重写<code>drawRect:</code>是无效的？虽然<strong>UIImageView</strong>也同样拥有一个<strong>CALayer</strong>，但不会申请一个后备存储来保存内容，而是使用<strong>CGImageRef</strong>作为内容，并且渲染服务将会把图片数据绘制到帧的缓冲区最终显示到屏幕。</p>
+<p>不卖关子了，咱们继续往下讲上面列举出的所有方法执行时机。就从layout说起，我们看到<strong>UIView</strong>和<strong>CALayer</strong>中都有几个类似的方法<code>setNeedsLayout</code>、<code>layoutIfNeede</code>d、<code>layoutSubviews/layoutSublayers</code>，这些全看官方文档就一目了然了，<code>setNeedsLayout</code>方法只是给view/layer记标识以便下一个drawing cycle（别忘了runLoop）消息layout_and_display_if_needed到来时能顺利往下执行与否，因此这个方法是可供给开发者主动调用并起到标识的作用，但是并不能直接触发layout，然而可以直接调用<code>layoutIfNeeded</code>方法在必要时强制执行layout subviews/sublayers。同理，<code>setNeedsDisplay</code>和<code>displayIfNeeded</code>（仅<strong>CALayer</strong>中有此方法）原理相似，唯独不同的是先计算视图布局（layout）系列方法后再显示（display）系列方法。哔哔这么多，还是没讲具体执行时机与顺序？</p>
+<p>OK，接下来开启进阶模式，咱们来模拟这些方法在系统中的调用过程，直接看demo中的代码，我再新建一个<strong>CustomLayer</strong>，在<strong>CustomView</strong>添加一下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">+ (Class)layerClass &#123;</div><div class="line">    return [CustomLayer class];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>也就是说，不再需要系统在<strong>UIView</strong>创建的时候帮我创建默认<strong>CALayer</strong>来当其layer属性，在<strong>CustomView</strong>实例创建时，会根据这个方法创建相应的<strong>CustomLayer</strong>来作为其 .layer。把demo跑起来debug，我们大致发现这样的执行顺序（以下伪代码仅为通过debug模拟后UIView&amp;CALayer执行顺序）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">CoreFoundation:__CFRUNLOOP_IS_CALLING_OUT_TO_AN_OBSERVER_CALLBACK_FUNCTION__</div><div class="line">    QuartzCore:CA::Transaction::observer_callback:</div><div class="line">        CA::Transaction::commit();</div><div class="line">            CA::Context::commit_transaction();</div><div class="line">        CA::Layer::layout_and_display_if_needed();</div><div class="line">            CA::Layer::layout_if_needed(); // 此处便是判断是否有setNeedsLayout标识        </div><div class="line">                [CALayer layoutSublayers]; // ①</div><div class="line">                   [UIView layoutSublayersOfLayer:]; // ② CALayerDelegate协议方法</div><div class="line">                       [UIView layoutSubviews]; // ③</div><div class="line">             CA::Layer::display_if_needed();// 此处便是判断是否有setNeedsDisplay标识</div><div class="line">                [CALayer display]; // ④</div><div class="line">                    [CALayer layerWillDraw:]; // ⑤ CALayerDelegate协议方法</div><div class="line">                        [CALayer drawInContext:];// ⑥</div><div class="line">                    [UIView drawLayer:inContext:]; // ⑦ CALayerDelegate协议方法   </div><div class="line">                        [UIView drawRect];// ⑧</div></pre></td></tr></table></figure></p>
+<p>现在执行时机与顺序应该算比较清楚了，但值得一提的是当你重写以上系统方法后<code>layoutSubviews</code>和<code>drawRect</code>不是必执行的方法哦（以上仅为模拟原生执行顺序），弄清楚执行顺序后自定义封装你想要的视图或组件便可以信手捏来。</p>
+<h3 id="主线程操作UI"><a href="#主线程操作UI" class="headerlink" title="主线程操作UI"></a>主线程操作UI</h3><p>iOS开发者人人皆知：UI操作只能放在主线程。why ？<br>我们知道通过看<strong>Runloop</strong>的<a href="https://opensource.apple.com/source/CF/CF-855.17/CFRunLoop.c" target="_blank" rel="external">源代码</a>，知道<code>UIApplicationMain</code>主函数首次获取并创建<strong>Runloop</strong>时便是在主线程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">CFRunLoopRef mainLoop = _CFRunLoopCreate();</div><div class="line">CFDictionarySetValue(loopsDic, pthread_main_thread_np(), mainLoop);</div></pre></td></tr></table></figure></p>
+<p>那么上面讲的CA发出的layout和display消息默认就是在主线程操作的，这只说明操作源于主线程，并不代表开发者不能主动让<strong>UIView</strong>的实现代码在子线程操作，比如可以这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">dispatch_async(dispatch_get_global_queue(0,0), ^&#123;</div><div class="line">    anotherView.frame = CGRectMake(100,100,10,10);</div><div class="line">    [view addSubview:anotherView];</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>这样写代码有经验的程序员自然一眼就发现不对，但是实际中的项目代码往往没这么简单，比如 网络回调方法有时候就是在子线程中操作的（隐性的代码不易被发现），一不小心恰好在此时调用<strong>UIView</strong>相关的操作这种情况想必很多人都中过招，此时编译器是不会直接提示的。那么为什么不行呢？又该如何检查及避免呢？</p>
+<p>依然还是从代码出发找找原因，可以直接查看<strong>UIView</strong>相关的属性，基本都类似这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@property(nonatomic) CGRect frame;</div><div class="line">@property(nonatomic) CGRect bounds;</div><div class="line">@property(nonatomic) CGPoint center;</div><div class="line">@property(nonatomic,readonly,strong) CALayer *layer;</div></pre></td></tr></table></figure></p>
+<p>其属性修饰符几乎都是nonatomic的，同样我们看过源码的话知道，非原子与原子修饰主要区别在于该属性是否有自旋锁的读取保障，也就是说nonatomic修饰的属性在读取时是非线程安全的。仅仅就这么一个简单的理由就能说服“UI操作只能放在主线程”吗？连我自己都觉得有点too young too simple ，来看看Apple高端大气的<a href="https://developer.apple.com/reference/uikit#//apple_ref/doc/uid/TP40006955-CH1-SW1" target="_blank" rel="external">解释</a>：</p>
+<blockquote>
+<p>For the most part, use UIKit classes only from your app’s main thread. This is particularly true for classes derived from UIResponder or that involve manipulating your app’s user interface in any way.</p>
+</blockquote>
+<p>简言翻译下：“对于<strong>UIKit</strong>而言，大部分类是只能在主线程操作的，主要是由于这些类大多是继承自<strong>UIResponder</strong>或是涉及各种用户界面交互事件的操作”。你看，苹果爸爸说话就是言简意赅。说白了，苹果主要是为了用户体验及界面流畅度来考虑的，撇开繁杂的界面在子线程操作需要更多的维护开销不说，设想下如果视图支持了子线程，用户在滑动着屏幕时突然N多个子视图异步回调刷新了，同时响应用户及屏幕会不会大有问题。原子操作的修改是小（何况这本就是故意为之），要保证UI界面的线程安全确是一笔不小的工作。</p>
+<p>既然苹果也说了“大部分类”，那就说明部分类及方法是线程安全的（可以子线程操作），比如 iOS4以后 <strong>UIColor</strong>、<strong>UIFont</strong>等都是线程安全的，还有我们常遇到的<strong>UIImage</strong>设置image的部分方法也是线程安全的哦（类似<code>imageWithContentOfFile:</code>是线程安全的，而<code>imageNamed:</code>在iOS9之前都是非线程安全的），所以在使用之前记得多查阅API文档。</p>
+<p>那么，怎么避免呢？我写了个<strong>UIView</strong>的category，数行代码写成的小工具可以放到项目工程中，运行时自动检测并避免这类错误（戳这里看<a href="https://github.com/andwell/FKGuardUIView" target="_blank" rel="external">小工具源码</a>）。类似常见的如下错误同样可以检测并避免：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Can&apos;t add self as subview</div></pre></td></tr></table></figure></p>
+<h3 id="异步绘制"><a href="#异步绘制" class="headerlink" title="异步绘制"></a>异步绘制</h3><p>嗯，不得不说这个话题很火爆。类似国外<strong>Facebook</strong>的开源库<strong>AsyncDisplayKit</strong>和国内开源库<strong>YYKit</strong>主要都是解决这个事儿的，既然上个话题说“UI操作只能放在主线程”，那又何谈异步绘制呢？很简单，我们已经弄清楚<strong>UIKit</strong>和<strong>CALayer</strong>大部分只能在主线程操作，但不代表CG的操作不能在子线程执行，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">UIGraphicsBeginImageContextWithOptions(CGSize size, BOOL opaque, CGFloat scale)</div><div class="line">UIGraphicsGetCurrentContext()</div><div class="line">UIGraphicsGetImageFromCurrentImageContext()</div><div class="line">UIGraphicsEndImageContext()</div></pre></td></tr></table></figure></p>
+<p>这些方法申明虽然在<strong>UIKit</strong>框架中，实则是C写的承接CG与UI的过渡函数，属于对CG绘图的封装，都是可以在子线程操作的。我的Demo中便是一个异步绘制红色五角星的代码，接下来上伪代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">CA::Layer::display_if_needed();</div><div class="line">  [CALayer display]; // CALayer只能主线程操作</div><div class="line">  dispatch_async(dispatch_get_global_queue(0,0), ^&#123;</div><div class="line">       // CG draw something</div><div class="line">       image = UIGraphicsGetImageFromCurrentImageContext();</div><div class="line">       // back to main thread when finished</div><div class="line">      dispatch_async(dispatch_get_main_queue(), ^&#123;</div><div class="line">          [CALayer setContents:image];</div><div class="line">      &#125;);</div><div class="line">  &#125;);</div></pre></td></tr></table></figure></p>
+<p>看完代码是不是感觉异步绘制实现起来还算简单吧。</p>
+
+        </div>
+        <!-- comments -->
+        
+          <section id="comments">
+            <div id="disqus_thread"></div>
+            <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+            var disqus_shortname = 'funkingguo'; // required: replace example with your forum shortname
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+              var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+              dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+              (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+          </section>
+          
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          © 2017 <a target="_blank" href="https://github.com/andwell">andwell.</a>
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

@@ -463,7 +463,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 0;
 }
 code {
-  color: #1999ec;
+  color: $theme-code-color;
   padding: 0 0.125rem;
   margin: 0 0.125rem;
   border-radius: 0.0625rem;
