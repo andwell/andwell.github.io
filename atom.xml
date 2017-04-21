@@ -5,11 +5,11 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://iosguo.com/"/>
-  <updated>2017-04-21T06:09:13.000Z</updated>
+  <updated>2017-04-21T06:16:50.000Z</updated>
   <id>http://iosguo.com/</id>
   
   <author>
-    <name>Fangqing Guo</name>
+    <name>Guo</name>
     
   </author>
   
@@ -20,7 +20,7 @@
     <link href="http://iosguo.com/2017/02/15/UIView&amp;CALayer/"/>
     <id>http://iosguo.com/2017/02/15/UIView&amp;CALayer/</id>
     <published>2017-02-16T02:08:00.000Z</published>
-    <updated>2017-04-21T06:09:13.000Z</updated>
+    <updated>2017-04-21T06:16:50.000Z</updated>
     
     <content type="html"><![CDATA[<p>我曾有过许多关于使用<strong>UIView</strong>的疑惑，好奇这些琳琅满目的视图是如何绘制到iPhone屏幕上的，多年的使用经验也未必对其烂如指掌，只能说稍有了解。如果你也曾疑惑，那就与我一同往下探究一番。<br><a id="more"></a></p>
 <h4 id="视图层结构"><a href="#视图层结构" class="headerlink" title="视图层结构"></a>视图层结构</h4><p>当我们拿到一个关于视图的需求时，最初要想的便是使用什么样的视图控件来实现？所以这就考验我们对于iOS系统支持的原生控件的熟练程度，比如：当需要一个图片展示容器，我们首先想到使用<strong>UIImageView</strong>；当需要一个文本行展示，我们会想到<strong>UILabel</strong>，这都是出于对<strong>UIKit</strong>组件框架的基本了解；那么当遇到需要图片和文本混排出现的需求时，我们应该使用怎样的视图控件呢？初级程序员会想到<strong>UILabel+UIImageView+UILabel</strong>来解决，然而稍有经验的程序员会选择自定义封装一个控件，孰优孰劣呢？</p>
@@ -98,7 +98,7 @@
     <link href="http://iosguo.com/2016/08/13/Network/"/>
     <id>http://iosguo.com/2016/08/13/Network/</id>
     <published>2016-08-14T06:18:26.000Z</published>
-    <updated>2017-04-21T02:22:03.000Z</updated>
+    <updated>2017-04-21T06:17:04.000Z</updated>
     
     <content type="html"><![CDATA[<p>关于移动客户端网络层设计相关的文章可能已经数不胜数了，所以原本并没打算单独开篇来讲这块，鉴于近期有同事说要我写个网络库的介绍文档，我就干脆写篇博文吧，从网络层的设计之初思考的问题到后期更新一并娓娓道来，权当设计文档讲解罢。<br><a id="more"></a></p>
 <h2 id="移动端网络层设计考虑的问题"><a href="#移动端网络层设计考虑的问题" class="headerlink" title="移动端网络层设计考虑的问题"></a>移动端网络层设计考虑的问题</h2><p>一个良好的封装往往耗时最多是在前期的思考上，同样在网络库设计之初，我们把大部分时间花在考虑以下几个问题上。</p>
