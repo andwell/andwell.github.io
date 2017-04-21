@@ -1,129 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <!-- Html Head Tag-->
-  <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="Fangqing Guo">
-  <!-- Open Graph Data -->
-  <meta property="og:title" content="移动客户端iOS网络库设计闲谈"/>
-  <meta property="og:description" content="" />
-  <meta property="og:site_name" content="Guo&#39;s Page"/>
-  <meta property="og:type" content="article" />
-  <meta property="og:image" content="http://yoursite.comundefined"/>
-  
-    <link rel="alternate" href="/atom.xml" title="Guo&#39;s Page" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-
-  <!-- Site Title -->
-  <title>Guo's Page</title>
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="/css/bootstrap.min.css">
-  <!-- Custom CSS -->
-  
-  <link rel="stylesheet" href="/css/style.light.css">
-
-  <!-- Google Analytics -->
-  
-
-</head>
-
-  <body>
-    <!-- Page Header -->
-
-
-<header class="site-header header-background" style="background-image: url(/images/yosemite.jpg)">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <div class="page-title with-background-image">
-          <p class="title">移动客户端iOS网络库设计闲谈</p>
-          <p class="subtitle"></p>
-        </div>
-        <div class="site-menu with-background-image">
-          <ul>
-            
-              <li>
-                <a href="/">
-                  
-                  主页
-                  
-                </a>
-              </li>
-            
-              <li>
-                <a href="/archives">
-                  
-                  文章列表
-                  
-                </a>
-              </li>
-            
-              <li>
-                <a href="https://github.com/andwell">
-                  
-                  Github
-                  
-                </a>
-              </li>
-            
-              <li>
-                <a href="mailto:wellguo@hotmail.com">
-                  
-                  邮箱
-                  
-                </a>
-              </li>
-            
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
-
-
-<article>
-  <div class="container typo">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <div class="post-info text-muted">
-          
-            <!-- Author -->
-            <span class="author info">By Fangqing Guo</span>
-          
-          <!-- Date -->
-          <span class="date-time info">On
-            <span class="date">2016-08-13</span>
-            <span class="time">18:06:27</span>
-          </span>
-          
-          <!--  Categories  -->
-            <span class="categories info">Under 
-
-<a href="/categories/网络层设计/">网络层设计</a>
-</span>
-          
-        </div>
-        <!-- Tags -->
-        
-          <div class="post-tags text-muted">
-            Tags: 
-
-<a class="tag" href="/tags/网络/">#网络</a> <a class="tag" href="/tags/iOS/">#iOS</a>
-
-
-          </div>
-        
-        <!-- Post Main Content -->
-        <div class="post-content">
-          <p>关于移动客户端网络层设计相关的文章可能已经数不胜数了，所以原本并没打算单独开篇来讲这块，鉴于近期有同事说要我写个网络库的介绍文档，我就干脆写篇博文吧，从网络层的设计之初思考的问题到后期更新一并娓娓道来，权当设计文档讲解罢。<br><a id="more"></a></p>
+<!DOCTYPE html><html lang="zh-cn"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=Edge"><meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"><meta name="format-detection" content="telephone=no"><meta name="format-detection" content="email=no"><meta name="description"><meta name="keywords" content="Guo, Guo's, Guos Page, iOS"><title>移动客户端iOS网络库设计闲谈 - Guo's Page</title><link rel="stylesheet" href="/css/main_style.min.css"><link rel="icon" href="/favicon.ico"></head><body><input id="navi" type="checkbox"><ul class="main-navication"><li><a href="/"><span>Home</span></a></li><li><a href="https://github.com/andwell"><span>Github</span></a></li><li><a href="mailto:wellguo@hotmail.com"><span>Email</span></a></li></ul><div class="wrapper" id="wrap"><div class="post-header"><label class="navi-button light" for="navi">MENU</label><img class="background" src="/images/yosemite.jpg"><div class="post-title"><h1 class="title">移动客户端iOS网络库设计闲谈</h1><ul class="meta"><li><i class="icon icon-author"></i>Fangqing Guo</li><li><i class="icon icon-clock"></i>5 Minutes</li><li><i class="icon icon-calendar"></i>2016年8月13日</li></ul></div></div><div class="article-content" style="max-width:800px"><p>关于移动客户端网络层设计相关的文章可能已经数不胜数了，所以原本并没打算单独开篇来讲这块，鉴于近期有同事说要我写个网络库的介绍文档，我就干脆写篇博文吧，从网络层的设计之初思考的问题到后期更新一并娓娓道来，权当设计文档讲解罢。<br><a id="more"></a></p>
 <h2 id="移动端网络层设计考虑的问题"><a href="#移动端网络层设计考虑的问题" class="headerlink" title="移动端网络层设计考虑的问题"></a>移动端网络层设计考虑的问题</h2><p>一个良好的封装往往耗时最多是在前期的思考上，同样在网络库设计之初，我们把大部分时间花在考虑以下几个问题上。</p>
 <ul>
 <li>使用者如何去调用API</li>
@@ -185,61 +60,16 @@
 </ol>
 <h4 id="关于适配ipv6"><a href="#关于适配ipv6" class="headerlink" title="关于适配ipv6"></a>关于适配ipv6</h4><p>同样我们可以从上图能看到网络监控的模块，基于苹果给出的开源类<code>reachability</code>再开发，并且实现网络状况(2G/3G/4G/wifi)变化的监控。严格把控APP内IP直连的请求，按照Apple文档修改即可。</p>
 <h4 id="关于同步对接NSURLSession"><a href="#关于同步对接NSURLSession" class="headerlink" title="关于同步对接NSURLSession"></a>关于同步对接<code>NSURLSession</code></h4><p>AFN3.0已经作出了相应更改支持<code>NSURLSession</code>，共享Session实现TCP复用从而减少握手时间，同时也简化了代码对认证的操作，这就为迎接明年的HTTPS定了基调，但AFN去掉了<code>NSOperation</code>的使用方式，就难以实现线程优先级、依赖等问题，所以我们摒弃直接使用AFN，保留了其请求前配置相关和数据返回后序列化相关的思路，取其精华去其糟粕的开发出了新的底层网络库，如上示意图。细节开发与设计，请移步阅读<a href="http://geek.csdn.net/news/detail/135822" target="_blank" rel="external">极客头条</a>–原文为笔者发布于《程序员》杂志文章「58同城iOS客户端网络框架的演进之路」。</p>
-
-        </div>
-        <!-- comments -->
-        
-          <section id="comments">
-            <div id="disqus_thread"></div>
-            <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-            var disqus_shortname = 'funkingguo'; // required: replace example with your forum shortname
-
-            /* * * DON'T EDIT BELOW THIS LINE * * */
-            (function() {
-              var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-              dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-              (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-            </script>
-            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-          </section>
-          
-      </div>
-    </div>
-  </div>
-</article>
-
-
-
-    <!-- Footer -->
-<footer>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        <p class="copyright text-muted">
-          © 2017 <a target="_blank" href="https://github.com/andwell">andwell.</a>
-          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
-        <p class="copyright text-muted">
-          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
-        </p>
-      </div>
-    </div>
-  </div>
-</footer>
-
-
-    <!-- After Footer Scripts -->
-<script src="/js/highlight.pack.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function(event) {
-    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
-    codeBlocks.forEach(function(block, index) {
-      hljs.highlightBlock(block);
-    });
-  });
-</script>
-
-  </body>
-</html>
-
+</div><div class="article-meta" style="max-width:800px"><div class="tags"><i class="icon icon-tag"></i><ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/iOS/">iOS</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/网络/">网络</a><span class="tag-list-count">1</span></li></ul></div><div class="categories"><i class="icon icon-category"></i><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/网络层设计/">网络层设计</a><span class="category-list-count">1</span></li></ul></div></div><div class="article-comment" style="max-width:800px"><div class="ds-thread" id="ds-thread" data-thread-key="cj1r6mel00001je9kwsbxtqoo" data-title="移动客户端iOS网络库设计闲谈" data-url="http://iosguo.com/2016/08/13/Network/" site-name="funkingguo"></div><script>var siteName = document.getElementById('ds-thread').getAttribute('site-name');
+var duoshuoQuery = {short_name: siteName};
+(function() {
+  var ds = document.createElement('script');
+  ds.type = 'text/javascript';ds.async = true;
+  ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+  ds.charset = 'UTF-8';
+  (document.getElementsByTagName('head')[0] 
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();</script></div><ul class="navication"><li class="home"><a href="/"><i class="icon icon-home"></i></a></li><li><a href="/2017/02/15/UIView&amp;CALayer/"><i class="icon icon-arror-left"></i></a></li></ul><div class="page-footer"><div class="top"><ul class="social"><li><a href="https://github.com/andwell" title="Github" target="_blank"><i class="icon icon-github"></i></a></li><li><a href="https://twitter.com/Guofangqing" title="Twitter" target="_blank"><i class="icon icon-twitter"></i></a></li></ul></div><div class="bottom"><p class="copyright">© 2017 Guo's Page<br><small>POWER BY <a href="https://hexo.io" target="_blank">HEXO</a></small></p></div></div></div><script>var wrap = document.getElementById('wrap');
+window.onload = function () {
+  wrap.className += ' done';
+}</script></body></html>
