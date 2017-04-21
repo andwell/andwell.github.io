@@ -715,7 +715,7 @@ h6 {
 @media only screen and (max-width: 414px) {
   .post-tags,
   .post-info {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
   }
   .post-tags .info,
   .post-info .info {
@@ -726,7 +726,7 @@ h6 {
     display: none;
   }
   .post-content {
-    font-size: 0.78125rem;
+    font-size: 0.90625rem;
   }
 }
 footer {
