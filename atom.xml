@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://iosguo.com/"/>
-  <updated>2017-04-21T06:07:23.000Z</updated>
+  <updated>2017-04-21T06:09:13.000Z</updated>
   <id>http://iosguo.com/</id>
   
   <author>
@@ -20,9 +20,9 @@
     <link href="http://iosguo.com/2017/02/15/UIView&amp;CALayer/"/>
     <id>http://iosguo.com/2017/02/15/UIView&amp;CALayer/</id>
     <published>2017-02-16T02:08:00.000Z</published>
-    <updated>2017-04-21T06:07:23.000Z</updated>
+    <updated>2017-04-21T06:09:13.000Z</updated>
     
-    <content type="html"><![CDATA[<p>作为一名从业多年的iOS开发者，我也曾有过许多关于使用<strong>UIView</strong>的疑惑，同样好奇这些琳琅满目的视图是如何绘制到iPhone屏幕上的，多年的使用经验也未必对其烂如指掌，只能说稍有了解。如果你也有疑惑，那就与我一同往下探究一番。<br><a id="more"></a></p>
+    <content type="html"><![CDATA[<p>我曾有过许多关于使用<strong>UIView</strong>的疑惑，好奇这些琳琅满目的视图是如何绘制到iPhone屏幕上的，多年的使用经验也未必对其烂如指掌，只能说稍有了解。如果你也曾疑惑，那就与我一同往下探究一番。<br><a id="more"></a></p>
 <h4 id="视图层结构"><a href="#视图层结构" class="headerlink" title="视图层结构"></a>视图层结构</h4><p>当我们拿到一个关于视图的需求时，最初要想的便是使用什么样的视图控件来实现？所以这就考验我们对于iOS系统支持的原生控件的熟练程度，比如：当需要一个图片展示容器，我们首先想到使用<strong>UIImageView</strong>；当需要一个文本行展示，我们会想到<strong>UILabel</strong>，这都是出于对<strong>UIKit</strong>组件框架的基本了解；那么当遇到需要图片和文本混排出现的需求时，我们应该使用怎样的视图控件呢？初级程序员会想到<strong>UILabel+UIImageView+UILabel</strong>来解决，然而稍有经验的程序员会选择自定义封装一个控件，孰优孰劣呢？</p>
 <p>我们知道iOS中视图相关的控件都是继承自<strong>UIView</strong>的（注意这里我指的都是控件），比如 UIButton/UILabel/UIImageView/UITableViewCell/UIScrollView等，然而<strong>UIView</strong>本身是不具备任何直接渲染显示能力的。我们也可以直接使用<strong>CALayer</strong>来封装展示出你想要的各种视图样式，那么他们都是什么样的关系结构呢？我们就从继承或所属关系讲起吧。</p>
 <p><img src="/images/viewpic1.png" alt=""></p>
@@ -78,7 +78,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;作为一名从业多年的iOS开发者，我也曾有过许多关于使用&lt;strong&gt;UIView&lt;/strong&gt;的疑惑，同样好奇这些琳琅满目的视图是如何绘制到iPhone屏幕上的，多年的使用经验也未必对其烂如指掌，只能说稍有了解。如果你也有疑惑，那就与我一同往下探究一番。&lt;br&gt;
+      &lt;p&gt;我曾有过许多关于使用&lt;strong&gt;UIView&lt;/strong&gt;的疑惑，好奇这些琳琅满目的视图是如何绘制到iPhone屏幕上的，多年的使用经验也未必对其烂如指掌，只能说稍有了解。如果你也曾疑惑，那就与我一同往下探究一番。&lt;br&gt;
     
     </summary>
     
