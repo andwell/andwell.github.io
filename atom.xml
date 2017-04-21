@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://iosguo.com/"/>
-  <updated>2017-04-21T02:33:15.000Z</updated>
+  <updated>2017-04-21T06:06:28.000Z</updated>
   <id>http://iosguo.com/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>小说iOS视图层（UIView/CALayer）绘制</title>
+    <title>小说iOS视图层）绘制</title>
     <link href="http://iosguo.com/2017/02/15/UIView&amp;CALayer/"/>
     <id>http://iosguo.com/2017/02/15/UIView&amp;CALayer/</id>
     <published>2017-02-16T02:08:00.000Z</published>
-    <updated>2017-04-21T02:33:15.000Z</updated>
+    <updated>2017-04-21T06:06:28.000Z</updated>
     
     <content type="html"><![CDATA[<p>作为一名从业多年的iOS开发者，我也曾有过许多关于使用<strong>UIView</strong>的疑惑，同样好奇这些琳琅满目的视图是如何绘制到iPhone屏幕上的，多年的使用经验也未必对其烂如指掌，只能说稍有了解。如果你也有疑惑，那就与我一同往下探究一番。<br><a id="more"></a></p>
 <h4 id="视图层结构"><a href="#视图层结构" class="headerlink" title="视图层结构"></a>视图层结构</h4><p>当我们拿到一个关于视图的需求时，最初要想的便是使用什么样的视图控件来实现？所以这就考验我们对于iOS系统支持的原生控件的熟练程度，比如：当需要一个图片展示容器，我们首先想到使用<strong>UIImageView</strong>；当需要一个文本行展示，我们会想到<strong>UILabel</strong>，这都是出于对<strong>UIKit</strong>组件框架的基本了解；那么当遇到需要图片和文本混排出现的需求时，我们应该使用怎样的视图控件呢？初级程序员会想到<strong>UILabel+UIImageView+UILabel</strong>来解决，然而稍有经验的程序员会选择自定义封装一个控件，孰优孰劣呢？</p>

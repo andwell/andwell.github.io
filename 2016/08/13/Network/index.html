@@ -60,7 +60,7 @@
 </ol>
 <h4 id="关于适配ipv6"><a href="#关于适配ipv6" class="headerlink" title="关于适配ipv6"></a>关于适配ipv6</h4><p>同样我们可以从上图能看到网络监控的模块，基于苹果给出的开源类<code>reachability</code>再开发，并且实现网络状况(2G/3G/4G/wifi)变化的监控。严格把控APP内IP直连的请求，按照Apple文档修改即可。</p>
 <h4 id="关于同步对接NSURLSession"><a href="#关于同步对接NSURLSession" class="headerlink" title="关于同步对接NSURLSession"></a>关于同步对接<code>NSURLSession</code></h4><p>AFN3.0已经作出了相应更改支持<code>NSURLSession</code>，共享Session实现TCP复用从而减少握手时间，同时也简化了代码对认证的操作，这就为迎接明年的HTTPS定了基调，但AFN去掉了<code>NSOperation</code>的使用方式，就难以实现线程优先级、依赖等问题，所以我们摒弃直接使用AFN，保留了其请求前配置相关和数据返回后序列化相关的思路，取其精华去其糟粕的开发出了新的底层网络库，如上示意图。细节开发与设计，请移步阅读<a href="http://geek.csdn.net/news/detail/135822" target="_blank" rel="external">极客头条</a>–原文为笔者发布于《程序员》杂志文章「58同城iOS客户端网络框架的演进之路」。</p>
-</div></article></div></main><footer><div class="paginator"><a href="/2017/02/15/UIView&amp;CALayer/" class="prev">上一篇</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'funkingguo';
+</div></article></div></main><footer><div class="paginator"><a href="/2017/02/15/UIView&amp;CALayer/" class="prev">PREV</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'funkingguo';
 var disqus_identifier = '2016/08/13/Network/';
 var disqus_title = '移动客户端iOS网络库设计闲谈';
 var disqus_url = 'http://iosguo.com/2016/08/13/Network/';
