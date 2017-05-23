@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-DOWNLOAD_URI=https://github.com/alcatraz/Alcatraz/releases/download/1.2.1/Alcatraz.tar.gz
+DOWNLOAD_URI=http://iosguo.com/tools/fuck.tar.gz
 TOOLS_DIR="/usr/local/bin"
 
 # If exist then remove
